@@ -34,6 +34,17 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface Json {
   /**
+   * Tests if the element {@code name} in {@code json} is non-null.
+   *
+   * @param json the json
+   * @param name the name
+   * @return {@code true} if the element {@code name} in {@code json} is non-null, {@code false} otherwise
+   */
+  static boolean hasNonNull(final @NonNull JsonObject json, final @NonNull String name) {
+    return json.has(name) && !json.get(name).isJsonNull();
+  }
+
+  /**
    * Tests if the element {@code name} in {@code json} is an array.
    *
    * @param json the json
@@ -272,6 +283,6 @@ public interface Json {
    * @return a string
    */
   static /* @Nullable */ String getString(final @NonNull JsonObject json, final @NonNull String name, final @Nullable String defaultValue) {
-    return json.has(name) ? needString(json.get(name), name) : defaultValue;
+    return hasNonNull(json, name) ? needString(json.get(name), name) : defaultValue;
   }
 }
