@@ -38,6 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JsonTest {
+  private static final double NUMBER_DOUBLE = ThreadLocalRandom.current().nextDouble();
+  private static final float NUMBER_FLOAT = ThreadLocalRandom.current().nextFloat();
   private static final int NUMBER_INT = ThreadLocalRandom.current().nextInt();
   private static final long NUMBER_LONG = ThreadLocalRandom.current().nextLong();
   private static final String STRING = UUID.randomUUID().toString();
@@ -50,6 +52,8 @@ class JsonTest {
     this.json.add("object", new JsonObject());
     this.json.addProperty("primitive-boolean-false", false);
     this.json.addProperty("primitive-boolean-true", true);
+    this.json.addProperty("primitive-number-double", NUMBER_DOUBLE);
+    this.json.addProperty("primitive-number-float", NUMBER_FLOAT);
     this.json.addProperty("primitive-number-int", NUMBER_INT);
     this.json.addProperty("primitive-number-long", NUMBER_LONG);
     this.json.addProperty("primitive-string", STRING);
@@ -104,14 +108,32 @@ class JsonTest {
     assertFalse(Json.isBoolean(this.json, "primitive-number-long"));
     assertFalse(Json.isBoolean(this.json, "primitive-string"));
 
-    assertEquals(false, Json.needBoolean(this.json.get("primitive-boolean-false"), "primitive-boolean-false"));
-    assertEquals(false, Json.needBoolean(this.json, "primitive-boolean-false"));
-    assertEquals(true, Json.needBoolean(this.json.get("primitive-boolean-true"), "primitive-boolean-true"));
-    assertEquals(true, Json.needBoolean(this.json, "primitive-boolean-true"));
+    assertFalse(Json.needBoolean(this.json.get("primitive-boolean-false"), "primitive-boolean-false"));
+    assertFalse(Json.needBoolean(this.json, "primitive-boolean-false"));
+    assertTrue(Json.needBoolean(this.json.get("primitive-boolean-true"), "primitive-boolean-true"));
+    assertTrue(Json.needBoolean(this.json, "primitive-boolean-true"));
 
-    assertEquals(false, Json.getBoolean(this.json, "primitive-boolean-false", true));
-    assertEquals(true, Json.getBoolean(this.json, "primitive-boolean-true", false));
-    assertEquals(true, Json.getBoolean(this.json, "primitive-boolean-nope", true));
+    assertFalse(Json.getBoolean(this.json, "primitive-boolean-false", true));
+    assertTrue(Json.getBoolean(this.json, "primitive-boolean-true", false));
+    assertTrue(Json.getBoolean(this.json, "primitive-boolean-nope", true));
+  }
+
+  @Test
+  void testDouble() {
+    assertEquals(NUMBER_DOUBLE, Json.needDouble(this.json.get("primitive-number-double"), "primitive-number-double"));
+    assertEquals(NUMBER_DOUBLE, Json.needDouble(this.json, "primitive-number-double"));
+
+    assertEquals(NUMBER_DOUBLE, Json.getDouble(this.json, "primitive-number-double", 2.34d));
+    assertEquals(2.34d, Json.getDouble(this.json, "primitive-number-double_nope", 2.34d));
+  }
+
+  @Test
+  void testFloat() {
+    assertEquals(NUMBER_FLOAT, Json.needFloat(this.json.get("primitive-number-float"), "primitive-number-float"));
+    assertEquals(NUMBER_FLOAT, Json.needFloat(this.json, "primitive-number-float"));
+
+    assertEquals(NUMBER_FLOAT, Json.getFloat(this.json, "primitive-number-float", 2.34f));
+    assertEquals(2.34f, Json.getFloat(this.json, "primitive-number-float_nope", 2.34f));
   }
 
   @Test

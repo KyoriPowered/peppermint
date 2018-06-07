@@ -78,6 +78,16 @@ public interface Json {
   }
 
   /**
+   * Tests if {@code json} represents a number.
+   *
+   * @param json the json
+   * @return {@code true} if {@code json} represents a number, {@code false} otherwise
+   */
+  static boolean isNumber(final @NonNull JsonElement json) {
+    return json.isJsonPrimitive() && json.getAsJsonPrimitive().isNumber();
+  }
+
+  /**
    * Tests if the element {@code name} in {@code json} is a number.
    *
    * @param json the json
@@ -144,6 +154,138 @@ public interface Json {
   }
 
   /*
+   * bytes
+   */
+
+  /**
+   * Gets {@code json} as a byte.
+   *
+   * @param json the json
+   * @param name the name
+   * @return a byte
+   */
+  static byte needByte(final @NonNull JsonElement json, final @NonNull String name) {
+    if(isNumber(json)) {
+      return json.getAsByte();
+    }
+    throw new JsonSyntaxException("Expected " + name + " to be a byte");
+  }
+
+  /**
+   * Gets the element {@code name} in {@code json} as a byte.
+   *
+   * @param json the json
+   * @param name the name
+   * @return a byte
+   */
+  static byte needByte(final @NonNull JsonObject json, final @NonNull String name) {
+    if(json.has(name)) {
+      return needByte(json.get(name), name);
+    }
+    throw new JsonSyntaxException("Missing " + name + ", expected to find a byte");
+  }
+
+  /**
+   * Gets the element {@code name} in {@code json} as a byte.
+   *
+   * @param json the json
+   * @param name the name
+   * @param defaultValue the default value
+   * @return a byte
+   */
+  static byte getByte(final @NonNull JsonObject json, final @NonNull String name, final byte defaultValue) {
+    return json.has(name) ? needByte(json.get(name), name) : defaultValue;
+  }
+
+  /*
+   * doubles
+   */
+
+  /**
+   * Gets {@code json} as a double.
+   *
+   * @param json the json
+   * @param name the name
+   * @return a double
+   */
+  static double needDouble(final @NonNull JsonElement json, final @NonNull String name) {
+    if(isNumber(json)) {
+      return json.getAsDouble();
+    }
+    throw new JsonSyntaxException("Expected " + name + " to be a double");
+  }
+
+  /**
+   * Gets the element {@code name} in {@code json} as a double.
+   *
+   * @param json the json
+   * @param name the name
+   * @return a double
+   */
+  static double needDouble(final @NonNull JsonObject json, final @NonNull String name) {
+    if(json.has(name)) {
+      return needDouble(json.get(name), name);
+    }
+    throw new JsonSyntaxException("Missing " + name + ", expected to find a double");
+  }
+
+  /**
+   * Gets the element {@code name} in {@code json} as a double.
+   *
+   * @param json the json
+   * @param name the name
+   * @param defaultValue the default value
+   * @return a double
+   */
+  static double getDouble(final @NonNull JsonObject json, final @NonNull String name, final double defaultValue) {
+    return json.has(name) ? needDouble(json.get(name), name) : defaultValue;
+  }
+
+  /*
+   * floats
+   */
+
+  /**
+   * Gets {@code json} as a float.
+   *
+   * @param json the json
+   * @param name the name
+   * @return a float
+   */
+  static float needFloat(final @NonNull JsonElement json, final @NonNull String name) {
+    if(isNumber(json)) {
+      return json.getAsFloat();
+    }
+    throw new JsonSyntaxException("Expected " + name + " to be a float");
+  }
+
+  /**
+   * Gets the element {@code name} in {@code json} as a float.
+   *
+   * @param json the json
+   * @param name the name
+   * @return a float
+   */
+  static float needFloat(final @NonNull JsonObject json, final @NonNull String name) {
+    if(json.has(name)) {
+      return needFloat(json.get(name), name);
+    }
+    throw new JsonSyntaxException("Missing " + name + ", expected to find a float");
+  }
+
+  /**
+   * Gets the element {@code name} in {@code json} as a float.
+   *
+   * @param json the json
+   * @param name the name
+   * @param defaultValue the default value
+   * @return a float
+   */
+  static float getFloat(final @NonNull JsonObject json, final @NonNull String name, final float defaultValue) {
+    return json.has(name) ? needFloat(json.get(name), name) : defaultValue;
+  }
+
+  /*
    * ints
    */
 
@@ -155,7 +297,7 @@ public interface Json {
    * @return an int
    */
   static int needInt(final @NonNull JsonElement json, final @NonNull String name) {
-    if(json.isJsonPrimitive()) {
+    if(isNumber(json)) {
       return json.getAsInt();
     }
     throw new JsonSyntaxException("Expected " + name + " to be an int");
@@ -199,7 +341,7 @@ public interface Json {
    * @return an int
    */
   static long needLong(final @NonNull JsonElement json, final @NonNull String name) {
-    if(json.isJsonPrimitive()) {
+    if(isNumber(json)) {
       return json.getAsLong();
     }
     throw new JsonSyntaxException("Expected " + name + " to be a long");
