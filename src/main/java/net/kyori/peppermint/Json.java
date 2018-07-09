@@ -67,6 +67,16 @@ public interface Json {
   }
 
   /**
+   * Tests if @code json} is a primitive.
+   *
+   * @param json the json
+   * @return {@code true} if {@code json} is a primitive, {@code false} otherwise
+   */
+  static boolean isPrimitive(final @NonNull JsonElement json) {
+    return json.isJsonPrimitive();
+  }
+
+  /**
    * Tests if the element {@code name} in {@code json} is a primitive.
    *
    * @param json the json
@@ -165,7 +175,7 @@ public interface Json {
    * @return a byte
    */
   static byte needByte(final @NonNull JsonElement json, final @NonNull String name) {
-    if(isNumber(json)) {
+    if(isPrimitive(json)) {
       return json.getAsByte();
     }
     throw new JsonSyntaxException("Expected " + name + " to be a byte");
@@ -209,7 +219,7 @@ public interface Json {
    * @return a double
    */
   static double needDouble(final @NonNull JsonElement json, final @NonNull String name) {
-    if(isNumber(json)) {
+    if(isPrimitive(json)) {
       return json.getAsDouble();
     }
     throw new JsonSyntaxException("Expected " + name + " to be a double");
@@ -253,7 +263,7 @@ public interface Json {
    * @return a float
    */
   static float needFloat(final @NonNull JsonElement json, final @NonNull String name) {
-    if(isNumber(json)) {
+    if(isPrimitive(json)) {
       return json.getAsFloat();
     }
     throw new JsonSyntaxException("Expected " + name + " to be a float");
@@ -297,7 +307,7 @@ public interface Json {
    * @return an int
    */
   static int needInt(final @NonNull JsonElement json, final @NonNull String name) {
-    if(isNumber(json)) {
+    if(isPrimitive(json)) {
       return json.getAsInt();
     }
     throw new JsonSyntaxException("Expected " + name + " to be an int");
@@ -341,7 +351,7 @@ public interface Json {
    * @return an int
    */
   static long needLong(final @NonNull JsonElement json, final @NonNull String name) {
-    if(isNumber(json)) {
+    if(isPrimitive(json)) {
       return json.getAsLong();
     }
     throw new JsonSyntaxException("Expected " + name + " to be a long");
